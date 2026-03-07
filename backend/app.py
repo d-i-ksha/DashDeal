@@ -6,8 +6,8 @@ from routes.order_routes import order_routes
 app = Flask(__name__)
 
 app.register_blueprint(user_routes,url_prefix='/api/users')
-app.register_blueprint(product_routes)
-app.register_blueprint(order_routes)
+app.register_blueprint(product_routes,url_prefix='/products')
+app.register_blueprint(order_routes,url_prefix='/orders')
 
 @app.route("/")
 def home():
