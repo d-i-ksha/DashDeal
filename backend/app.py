@@ -5,7 +5,7 @@ from routes.order_routes import order_routes
 
 app = Flask(__name__)
 
-app.register_blueprint(user_routes)
+app.register_blueprint(user_routes,url_prefix='/api/users')
 app.register_blueprint(product_routes)
 app.register_blueprint(order_routes)
 

@@ -5,12 +5,21 @@ user_routes = Blueprint("user_routes", __name__)
 
 @user_routes.route("/register", methods=["POST"])
 def register():
-    data = request.json
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
 
-    name = data["name"]
-    email = data["email"]
-    password = data["password"]
+    name = data.get("name")
+    email = data.get("email")
+    password = data.get("password")
+    
+    if not all([name, email, password]):
+        return jsonify({"error": "Missing required fields"}), 400
 
-    create_user(name, email, password)
-
-    return jsonify({"message": "User registered successfully"})
+    try:
+        # Pass data to your model
+        create_user(name, email, password)
+        return jsonify({"message": "User registered successfully"}), 201
+    except Exception as e:
+        # 4. Handle database errors (e.g., duplicate email)
+        return jsonify({"error": str(e)}), 500
