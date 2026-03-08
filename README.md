@@ -1,18 +1,20 @@
-# DashDeal
+DashDeal - Women's Fashion E-commerce API 👗✨
+DashDeal is a robust backend engine designed for a modern women's fashion store. It handles everything from secure user authentication to complex order transactions using the Indian Rupee (INR) currency.
 
-## Project Description
-Online shopping website.
+Features
+Secure Authentication: Implements industry-standard password hashing using Werkzeug to protect user data.
 
-## Technologies Used
-Frontend: HTML, CSS, JavaScript  
-Backend: Python (Flask)  
+Diverse Product Catalog: Organized categories for Ethnic Wear, Western Wear, Jewelry, Footwear, and more.
+
+Transactional Integrity: Uses SQL transactions to ensure orders and order items are saved accurately or rolled back on failure.
+
+Modular MVC Architecture: Cleanly separated into Models, Routes, and Controllers for high scalability.
+
+Tech Stack
+Backend: Python / Flask
+
 Database: MySQL
 
-## Features
-User login
-Product browsing
-Cart system
-Order placement
+Security: Password Hashing (PBKDF2)
 
-## AI bot
-AI for user interaction
+Tools: Thunder Client (Testing), Git/GitHub (Version Control)
