@@ -8,7 +8,7 @@ def create_user(name, email, password):
     try:
         hashed_pw=generate_password_hash(password)
         query = "INSERT INTO users (name, email, password,role) VALUES (%s, %s, %s,%s)"
-        cursor.execute(query,(name, email, password ,"customer"))
+        cursor.execute(query,(name, email, hashed_pw ,"customer"))
         connection.commit()
         return True
     
