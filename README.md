@@ -1,5 +1,5 @@
 DashDeal - Women's Fashion E-commerce API 👗✨
-DashDeal is a robust backend engine designed for a modern women's fashion store. It handles everything from secure user authentication to complex order transactions using the Indian Rupee (INR) currency.
+DashDeal is designed for a modern women's fashion store. It handles everything from secure user authentication to complex order transactions using the Indian Rupee (INR) currency.
 
 Features
 Secure Authentication: Implements industry-standard password hashing using Werkzeug to protect user data.
