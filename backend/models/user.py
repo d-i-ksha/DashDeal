@@ -1,23 +1,32 @@
 from database.db_connection import get_db_connection
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def create_user(name, email, password):
     connection = get_db_connection()
     cursor = connection.cursor()
 
     try:
-       
+        hashed_pw=generate_password_hash()
         query = "INSERT INTO users (name, email, password,role) VALUES (%s, %s, %s,%s)"
-        values = (name, email, password ,"customer")
-
-        cursor.execute(query, values)
+        cursor.execute(query,(name, email, password ,"customer"))
         connection.commit()
-        print("User inserted successfully")
+        return True
+    
+    finally:
+        cursor.close()
+        connection.close()
+
+def verify_user(email,password):
+    connection=get_db_connection()
+    cursor=connection.cursor(dictionary=True)
+    try:
+        query = "SELECT * FROM users WHERE email = %s"
+        cursor.execute(query, (email,))
+        user = cursor.fetchone()
         
-    except Exception as e:
-        
-        print(f"Database Error: {e}") 
-         
+        if user and check_password_hash(user['password'], password):
+            return user
+        return None
     finally:
         cursor.close()
         connection.close()
