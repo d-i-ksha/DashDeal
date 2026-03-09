@@ -2,28 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Product Details | DashDeal</title>
+    <title>Shop Collection | DashDeal</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <header>
-        <div class="logo">DashDeal ✨</div>
-        <nav><a href="index.html">Home</a> <a href="cart.html">Cart</a></nav>
+        <a href="index.html" class="logo">DASHDEAL</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="cart.html">Bag</a>
+            <a href="login.html">Login</a>
+        </nav>
     </header>
 
     <div class="container">
-        <div id="product-detail" class="form-container" style="max-width: 800px;">
-            <p>Loading style...</p>
+        <h2 class="section-title">ALL PRODUCTS</h2>
+        <div id="product-list" class="product-grid">
+            <p>Loading the latest trends...</p>
         </div>
     </div>
+
     <script src="../js/script.js"></script>
     <script>
-        // Specific logic for this page
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            if (id) loadSingleProduct(id);
-        };
+        // Trigger the fetch specifically for this page
+        window.onload = loadProducts;
     </script>
 </body>
 </html>
