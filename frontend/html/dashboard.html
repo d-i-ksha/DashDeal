@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Account | DashDeal</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header><a href="index.html" class="logo">DASHDEAL</a></nav></header>
+    <div class="container">
+        <h2 id="welcome-msg">Account Overview</h2>
+        <div class="card" style="padding: 20px;">
+            <h3>Recent Orders</h3>
+            <table>
+                <thead>
+                    <tr><th>Order ID</th><th>Date</th><th>Total</th><th>Status</th></tr>
+                </thead>
+                <tbody id="order-history"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+    <script>window.onload = loadUserDashboard;</script>
+</body>
+</html>

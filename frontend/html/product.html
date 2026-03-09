@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details | DashDeal</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">DashDeal ✨</div>
+        <nav><a href="index.html">Home</a> <a href="cart.html">Cart</a></nav>
+    </header>
+
+    <div class="container">
+        <div id="product-detail" class="form-container" style="max-width: 800px;">
+            <p>Loading style...</p>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+    <script>
+        // Specific logic for this page
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (id) loadSingleProduct(id);
+        };
+    </script>
+</body>
+</html>
