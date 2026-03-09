@@ -78,3 +78,27 @@ function addToCart(id, title, price) {
     localStorage.setItem('cart', JSON.stringify(cart));
     alert(`${title} added to your bag!`);
 }
+
+// New Function: Load all products for the Shop Page
+async function loadProducts() {
+    const grid = document.getElementById('product-list');
+    if (!grid) return;
+    try {
+        // Matches the url_prefix='/products' in your app.py
+        const res = await fetch(`${BASE_URL}/products/all`); 
+        const products = await res.json();
+        
+        grid.innerHTML = products.map(p => `
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=500" alt="Fashion">
+                <div class="card-info">
+                    <h3>${p.title}</h3>
+                    <p class="price">₹${p.discount_price}</p>
+                    <button class="btn" onclick="addToCart(${p.id}, '${p.title}', ${p.discount_price})">Add to Bag</button>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) {
+        grid.innerHTML = "<p>Could not load products. Please check if backend is running.</p>";
+    }
+}
