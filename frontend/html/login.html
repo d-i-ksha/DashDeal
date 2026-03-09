@@ -7,11 +7,11 @@
 </head>
 <body>
     <header>
-        <a href="index.html" class="logo">DASHDEAL</a>
+        <a href="index.html" class="logo">DASHDEAL ✨</a>
     </header>
 
     <div class="container">
-        <div class="form-container" id="login-section">
+        <div id="login-section" class="form-container">
             <h2>Welcome Back</h2>
             <form id="login-form">
                 <input type="email" id="email" placeholder="Email Address" required>
@@ -21,7 +21,7 @@
             <p>New here? <a href="#" onclick="toggleAuth()">Register Now</a></p>
         </div>
 
-        <div class="form-container" id="register-section" style="display: none;">
+        <div id="register-section" class="form-container" style="display: none;">
             <h2>Create Account</h2>
             <form id="register-form">
                 <input type="text" id="reg-name" placeholder="Full Name" required>
@@ -35,23 +35,16 @@
 
     <script src="../js/script.js"></script>
     <script>
-        // Simple toggle function to switch between Login and Register
         function toggleAuth() {
             const login = document.getElementById('login-section');
             const register = document.getElementById('register-section');
-            if (login.style.display === "none") {
-                login.style.display = "block";
-                register.style.display = "none";
-            } else {
-                login.style.display = "none";
-                register.style.display = "block";
-            }
+            const isLoginVisible = login.style.display !== "none";
+            login.style.display = isLoginVisible ? "none" : "block";
+            register.style.display = isLoginVisible ? "block" : "none";
         }
-
-        // Initialize the login/register listeners from script.js
-        window.onload = () => {
-            initAuthListeners();
-        };
+        
+        // Initialize the auth listeners from script.js
+        window.onload = initAuthListeners;
     </script>
 </body>
 </html>
