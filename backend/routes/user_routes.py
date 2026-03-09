@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.user import create_user
+from models.user import verify_user
 
 user_routes = Blueprint("user_routes", __name__)
 
@@ -23,3 +24,17 @@ def register():
     except Exception as e:
         # 4. Handle database errors (e.g., duplicate email)
         return jsonify({"error": str(e)}), 500
+    
+@user_routes.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+    
+    # This calls the verify_user function we fixed earlier
+    user = verify_user(email, password)
+    
+    if user:
+        return jsonify({"message": "Login successful", "user": user}), 200
+    else:
+        return jsonify({"error": "Invalid email or password"}), 401

@@ -46,14 +46,16 @@ function initAuthListeners() {
             }
         });
     }
+}
+    // Ensure the login fetch matches the backend path exactly
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
+        try {
             const res = await fetch(`${BASE_URL}/api/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -62,13 +64,17 @@ function initAuthListeners() {
 
             const data = await res.json();
             if (res.ok) {
+                // Save user data for the Dashboard
                 localStorage.setItem('user', JSON.stringify(data.user));
-                window.location.href = "index.html";
+                window.location.href = "index.html"; 
             } else {
-                alert(data.error || "Invalid Credentials");
+                alert(data.error || "Login failed");
             }
-        });
-    }
+        } catch (err) {
+            console.error("Login Error:", err);
+        }
+    });
+    
 }
 
 // 3. Cart Helper
