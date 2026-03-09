@@ -30,7 +30,13 @@
 
     <script src="../js/script.js"></script>
     <script>
-        window.onload = loadFeatured;
+    window.onload = () => {
+        if (typeof loadFeatured === "function") {
+            loadFeatured();
+        } else {
+            console.error("loadFeatured is still not defined. Check script.js for syntax errors.");
+        }
+    };
     </script>
 </body>
 </html>
