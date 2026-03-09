@@ -7,25 +7,31 @@
 </head>
 <body>
     <header>
-        <a href="index.html" class="logo">DASHDEAL</a>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="cart.html">Bag</a>
-            <a href="login.html">Login</a>
-        </nav>
+        <a href="index.html" class="logo" style="text-decoration:none; color:black; font-size:1.5rem; font-weight:bold; padding:20px; display:block;">DASHDEAL</a>
     </header>
 
     <div class="container">
-        <h2 class="section-title">ALL PRODUCTS</h2>
+        <div class="filter-bar">
+            <select id="category-select" onchange="filterAndSort()">
+                <option value="all">All Categories</option>
+                <option value="Saree">Sarees</option>
+                <option value="Jewelry">Jewelry</option>
+                <option value="Western Wear">Western Wear</option>
+            </select>
+            
+            <select id="price-sort" onchange="filterAndSort()">
+                <option value="none">Sort By Price</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
+            </select>
+        </div>
+
         <div id="product-list" class="product-grid">
-            <p>Loading the latest trends...</p>
+            <p style="text-align:center;">Loading the latest trends...</p>
         </div>
     </div>
 
     <script src="../js/script.js"></script>
-    <script>
-        // Trigger the fetch specifically for this page
-        window.onload = loadProducts;
-    </script>
+    <script>window.onload = loadProducts;</script>
 </body>
 </html>
