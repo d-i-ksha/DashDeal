@@ -68,13 +68,13 @@ async function loadProducts() {
 }
 
 function filterAndSort() {
-    const category = document.getElementById('category-select').value;
+    const categoryName = document.getElementById('category-select').value;
     const sortOrder = document.getElementById('price-sort').value;
     
     let filtered = [...localInventory];
     
     if (category !== 'all') {
-        filtered = filtered.filter(p => p.category === category);
+        filtered = filtered.filter(p => p.category === categoryName);
     }
     
     if (sortOrder === 'low') filtered.sort((a, b) => a.discount_price - b.discount_price);
