@@ -228,20 +228,21 @@ function renderIntoGrid(grid, products) {
         grid.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>No products found in this category.</p>";
         return;
     }
-    grid.innerHTML = products.map(p => {
-        // Escape single quotes in titles to prevent JavaScript errors in the onclick attribute
-        const safeTitle = p.title.replace(/'/g, "\\'");
-        return `
-            <div class="card">
-                <img src="${p.image_url || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'}" alt="${p.title}">
-                <div class="card-info">
-                    <h3>${p.title}</h3>
-                    <p class="price">₹${p.discount_price}</p>
-                    <button class="btn" onclick="addToCart(${p.id}, '${safeTitle}', ${p.discount_price})">Add to Bag</button>
-                </div>
-            </div>`;
-    }).join('');
-}
+    grid.innerHTML = products.map(p => `
+    <div class="card">
+        <img 
+            src="${p.image_url}" 
+            alt="${p.title}" 
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600';"
+        >
+        <div class="card-info">
+            <h3>${p.title}</h3>
+            <p class="price">₹${p.discount_price}</p>
+            <button class="btn" onclick="addToCart(${p.id}, '${p.title.replace(/'/g, "\\'")}', ${p.discount_price})">Add to Bag</button>
+        </div>
+    </div>
+`).join('');
+
 
 // 4. Auth Initialization
 function initAuthListeners() {
