@@ -25,6 +25,13 @@ function checkUserStatus() {
     }
 }
 
+// Global Voice Synthesis Function
+function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.rate = 0.9;
+    window.speechSynthesis.speak(msg);
+}
+
 function showToast(msg) {
     const toast = document.getElementById('toast') || createToastElement();
     toast.innerText = msg;
@@ -61,14 +68,12 @@ async function loadProducts() {
 }
 
 function filterAndSort() {
-    // FIX: IDs must match exactly with your product.html <select> tags
     const category = document.getElementById('category-select').value;
     const sortOrder = document.getElementById('price-sort').value;
     
     let filtered = [...localInventory];
     
     if (category !== 'all') {
-        // Ensure your SQL backend returns a field exactly named 'category'
         filtered = filtered.filter(p => p.category === category);
     }
     
@@ -116,7 +121,7 @@ function removeFromCart(index) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
-    displayCart(); // Refreshes the cart list immediately
+    displayCart();
 }
 
 async function processCheckout() {
@@ -135,6 +140,63 @@ async function processCheckout() {
     }
 
     window.location.href = "payment.html"; 
+}
+
+// Final Order Database Insertion
+async function completeOrderExecution() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    if (!user || !user.id) {
+        showToast("Session error. Please login again.");
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+
+    // FIXED: Added missing comma after items array
+    const orderData = {
+        user_id: user.id,
+        items: cart,
+        total_amount: total
+    };
+
+    try {
+        const response = await fetch(`${BASE_URL}/orders/checkout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.status === 201) {
+            showToast("Transaction Successful!");
+            speak("Thank you for your purchase. Your order has been placed successfully.");
+            localStorage.removeItem('cart');
+            setTimeout(() => window.location.href = "dashboard.html", 2000);
+        } else {
+            showToast("Payment Authorization Failed.");
+            speak("I am sorry, the payment could not be processed.");
+        }
+    } catch (err) {
+        console.error("Final Order Error:", err);
+        showToast("Server error during payment.");
+    }
+}
+
+async function finalizePayment() {
+    const cardInput = document.getElementById('card-number');
+    if (!cardInput) return;
+    
+    const card = cardInput.value;
+    if(card.length < 16) return alert("Please enter a 16-digit card number.");
+    
+    speak("Processing your payment.");
+
+    try {
+        await completeOrderExecution(); 
+    } catch (err) {
+        showToast("Payment failed: " + err.message);
+    }
 }
 
 // Helper Rendering Functions
@@ -179,8 +241,8 @@ function initAuthListeners() {
                 const data = await res.json();
                 if (res.ok) {
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    showToast("Login Successful! Redirecting...");
-                    setTimeout(() => window.location.href = "index.html", 1500);
+                    showToast("Login Successful!");
+                    setTimeout(() => window.location.href = "index.html", 1000);
                 } else {
                     showToast(data.error || "Invalid Credentials");
                 }
@@ -188,36 +250,5 @@ function initAuthListeners() {
                 showToast("Server unreachable.");
             }
         };
-    }
-}
-async function completeOrderExecution() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const user = JSON.parse(localStorage.getItem('user'));
-    const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
-
-    const orderData = {
-        user_id: user.id,
-        total_amount: total,
-        items: cart // Matches your backend order_routes.py
-    };
-
-    try {
-        const response = await fetch(`${BASE_URL}/orders/checkout`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-        });
-
-        if (response.status === 201) {
-            showToast("Transaction Successful! Generating Invoice...");
-            speak("Thank you for your purchase. Your order has been placed successfully.");
-            localStorage.removeItem('cart'); // Clear cart
-            setTimeout(() => window.location.href = "dashboard.html", 2000);
-        } else {
-            showToast("Payment Authorization Failed.");
-            speak("I am sorry, the payment could not be processed.");
-        }
-    } catch (err) {
-        console.error("Final Order Error:", err);
     }
 }
