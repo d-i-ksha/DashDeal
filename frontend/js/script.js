@@ -242,6 +242,7 @@ function renderIntoGrid(grid, products) {
         </div>
     </div>
 `).join('');
+}
 
 
 // 4. Auth Initialization
@@ -297,7 +298,6 @@ async function loadUserDashboard() {
             return;
         }
 
-        // Map the database rows to table rows
         orderTableBody.innerHTML = orders.map(order => `
             <tr>
                 <td>#${order.id}</td>

@@ -72,8 +72,8 @@ nav a { text-decoration: none; color: var(--dark); margin-left: 25px; font-weigh
     width: 100%; 
     height: 450px; 
     object-fit: cover; /* Crops the image to fit the box without stretching */
-    object-position: center; /* Ensures the middle of the photo is visible */
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #f0f0f0; /* Soft grey background while loading */
+    color: transparent;
 }
 .card:hover img {
     transform: scale(1.05); /* Adds a subtle zoom effect on hover */
