@@ -47,14 +47,23 @@ function createToastElement() {
 }
 
 // 2. Product Loading & Filtering
-async function loadFeatured() {
-    const grid = document.getElementById('featured-grid');
+async function loadProducts() {
+    const grid = document.getElementById('product-list');
     if (!grid) return;
     try {
         const res = await fetch(`${BASE_URL}/products/all`);
-        const products = await res.json();
-        renderIntoGrid(grid, products.slice(0, 3));
-    } catch (err) { console.error("Featured items error", err); }
+        const data = await res.json();
+        
+        // Ensure we are working with numbers for sorting
+        localInventory = data.map(p => ({
+            ...p,
+            discount_price: parseFloat(p.discount_price)
+        }));
+
+        renderProducts(localInventory);
+    } catch (err) { 
+        console.error("Error loading products", err); 
+    }
 }
 
 async function loadProducts() {
@@ -71,20 +80,23 @@ function filterAndSort() {
     const categoryName = document.getElementById('category-select').value;
     const sortOrder = document.getElementById('price-sort').value;
     
+    // 1. Always start from the full localInventory
     let filtered = [...localInventory];
     
-    if (category !== 'all') {
+    // 2. Filter by category
+    if (categoryName !== 'all') {
         filtered = filtered.filter(p => 
-            p.category && p.category.toString().trim().toLowerCase() === categoryName.trim().toLowerCase()
+            p.category && p.category.trim().toLowerCase() === categoryName.trim().toLowerCase()
         );
     }
     
-    if (sortOrder === 'low'){
-        filtered.sort((a, b) => parseFloat(a.discount_price) - parseFloat(b.discount_price));
+    // 3. Sort by price (Numbers-based)
+    if (sortOrder === 'low') {
+        filtered.sort((a, b) => a.discount_price - b.discount_price);
+    } else if (sortOrder === 'high') {
+        filtered.sort((a, b) => b.discount_price - a.discount_price);
     }
-    if (sortOrder === 'high'){
-        filtered.sort((a, b) => parseFloat(b.discount_price) - parseFloat(a.discount_price));
-    }
+    
     renderProducts(filtered);
 }
 
@@ -211,20 +223,24 @@ function renderProducts(products) {
 }
 
 function renderIntoGrid(grid, products) {
+    if (!grid) return;
     if (products.length === 0) {
-        grid.innerHTML = "<p>No products found.</p>";
+        grid.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>No products found in this category.</p>";
         return;
     }
-    grid.innerHTML = products.map(p => `
-        <div class="card">
-            <img src= "${p.image_url || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'}" alt="${p.title}">
-            <div class="card-info">
-                <h3>${p.title}</h3>
-                <p class="price">₹${p.discount_price}</p>
-                <button class="btn" onclick="addToCart(${p.id}, '${p.title}', ${p.discount_price})">Add to Bag</button>
-            </div>
-        </div>
-    `).join('');
+    grid.innerHTML = products.map(p => {
+        // Escape single quotes in titles to prevent JavaScript errors in the onclick attribute
+        const safeTitle = p.title.replace(/'/g, "\\'");
+        return `
+            <div class="card">
+                <img src="${p.image_url || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'}" alt="${p.title}">
+                <div class="card-info">
+                    <h3>${p.title}</h3>
+                    <p class="price">₹${p.discount_price}</p>
+                    <button class="btn" onclick="addToCart(${p.id}, '${safeTitle}', ${p.discount_price})">Add to Bag</button>
+                </div>
+            </div>`;
+    }).join('');
 }
 
 // 4. Auth Initialization
