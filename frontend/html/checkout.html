@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipping Details | DashDeal</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">DASHDEAL ✨</div>
+    </header>
+
+    <div class="container">
+        <div class="form-container" style="max-width: 600px; margin: 0 auto;">
+            <h2>Delivery Information</h2>
+            <form id="shipping-form">
+                <input type="text" id="ship-address" placeholder="Street Address / House No." required>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="ship-city" placeholder="City" style="flex:1;" required>
+                    <input type="text" id="ship-pincode" placeholder="Pincode" style="flex:1;" required>
+                </div>
+                <input type="tel" id="ship-phone" placeholder="Contact Number" required>
+                
+                <h3 style="margin-top:20px;">Delivery Method</h3>
+                <select id="ship-method" style="width:100%; padding:12px; margin-bottom:20px;">
+                    <option value="Standard">Standard Delivery (3-5 Days) - Free</option>
+                    <option value="Express">Express Delivery (Next Day) - ₹150</option>
+                </select>
+
+                <button type="submit" class="btn" style="width: 100%;">Continue to Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        document.getElementById('shipping-form').onsubmit = (e) => {
+            e.preventDefault();
+            const shippingInfo = {
+                address: document.getElementById('ship-address').value,
+                city: document.getElementById('ship-city').value,
+                pincode: document.getElementById('ship-pincode').value,
+                phone: document.getElementById('ship-phone').value,
+                method: document.getElementById('ship-method').value
+            };
+            // Save shipping info temporarily
+            localStorage.setItem('shippingDetails', JSON.stringify(shippingInfo));
+            window.location.href = "payment.html";
+        };
+    </script>
+</body>
+</html>

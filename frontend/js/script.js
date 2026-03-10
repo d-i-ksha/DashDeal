@@ -156,26 +156,30 @@ async function processCheckout() {
         return;
     }
 
-    window.location.href = "payment.html"; 
+    window.location.href = "checkout.html"; 
 }
 
 // Final Order Database Insertion
 async function completeOrderExecution() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const user = JSON.parse(localStorage.getItem('user'));
+    const shipping = JSON.parse(localStorage.getItem('shippingDetails')); 
     
-    if (!user || !user.id) {
-        showToast("Session error. Please login again.");
+    if (!user || !shipping) {
+        showToast("Missing shipping or session information.");
         return;
     }
 
     const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
 
-    // FIXED: Added missing comma after items array
     const orderData = {
         user_id: user.id,
         items: cart,
-        total_amount: total
+        total_amount: total,
+        // NEW: Include shipping details in the request
+        shipping_address: `${shipping.address}, ${shipping.city} - ${shipping.pincode}`,
+        contact_number: shipping.phone,
+        delivery_method: shipping.method
     };
 
     try {
@@ -189,6 +193,7 @@ async function completeOrderExecution() {
             showToast("Transaction Successful!");
             speak("Thank you for your purchase. Your order has been placed successfully.");
             localStorage.removeItem('cart');
+            localStorage.removeItem('shippingDetails'); // Clean up
             setTimeout(() => window.location.href = "dashboard.html", 2000);
         } else {
             showToast("Payment Authorization Failed.");
@@ -274,6 +279,35 @@ function initAuthListeners() {
             }
         };
     }
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        registerForm.onsubmit = async (e) => {
+            e.preventDefault();
+            // Pulling values using the IDs from your login.html
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const res = await fetch(`${BASE_URL}/api/users/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast("Registration Successful! Please Login.");
+                    // Switch view back to login section
+                    if (typeof toggleAuth === "function") toggleAuth(); 
+                } else {
+                    showToast(data.error || "Registration failed.");
+                }
+            } catch (err) {
+                showToast("Server unreachable.");
+            }
+        };
+    }
 }
 async function loadUserDashboard() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -303,7 +337,11 @@ async function loadUserDashboard() {
                 <td>#${order.id}</td>
                 <td>${new Date(order.created_at).toLocaleDateString()}</td>
                 <td>₹${order.total_amount}</td>
-                <td style="color: ${order.status === 'Pending' ? 'orange' : 'green'};">
+                <td style="font-size: 0.85rem; color: #666;">
+                    ${order.shipping_address || 'N/A'}<br>
+                    <small>📞 ${order.contact_number || ''}</small>
+                </td>
+                <td style="color: ${order.status === 'Pending' ? 'orange' : 'green'}; font-weight: bold;">
                     ${order.status}
                 </td>
             </tr>
