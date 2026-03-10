@@ -18,3 +18,11 @@ Database: MySQL
 Security: Password Hashing (PBKDF2)
 
 Tools: Thunder Client (Testing), Git/GitHub (Version Control)
+
+API Endpoints
+
+POST /register
+POST /login
+GET /products
+POST /order
+GET /orders
