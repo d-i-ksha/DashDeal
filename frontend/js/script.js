@@ -190,3 +190,34 @@ function initAuthListeners() {
         };
     }
 }
+async function completeOrderExecution() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const user = JSON.parse(localStorage.getItem('user'));
+    const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+
+    const orderData = {
+        user_id: user.id,
+        total_amount: total,
+        items: cart // Matches your backend order_routes.py
+    };
+
+    try {
+        const response = await fetch(`${BASE_URL}/orders/checkout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.status === 201) {
+            showToast("Transaction Successful! Generating Invoice...");
+            speak("Thank you for your purchase. Your order has been placed successfully.");
+            localStorage.removeItem('cart'); // Clear cart
+            setTimeout(() => window.location.href = "dashboard.html", 2000);
+        } else {
+            showToast("Payment Authorization Failed.");
+            speak("I am sorry, the payment could not be processed.");
+        }
+    } catch (err) {
+        console.error("Final Order Error:", err);
+    }
+}
