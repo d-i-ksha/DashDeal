@@ -6,7 +6,7 @@ window.onload = () => {
     if (document.getElementById('featured-grid')) loadFeatured();
     if (document.getElementById('product-list')) loadProducts();
     if (document.getElementById('cart-items')) displayCart();
-    
+    if (document.getElementById('login-form')) initAuthListeners();
     initAuthListeners();
     checkUserStatus();
 };
@@ -75,7 +75,7 @@ function filterAndSort() {
     
     if (category !== 'all') {
         filtered = filtered.filter(p => 
-            p.category.trim().toLowerCase() === categoryName.trim().toLowerCase()
+            p.category && p.category.toString().trim().toLowerCase() === categoryName.trim().toLowerCase()
         );
     }
     

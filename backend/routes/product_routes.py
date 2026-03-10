@@ -6,11 +6,9 @@ product_routes = Blueprint("product_routes", __name__)
 @product_routes.route("/all", methods=["GET"])
 def get_all_products():
     connection = get_db_connection()
-    # Using dictionary=True makes the results easy to turn into JSON
     cursor = connection.cursor(dictionary=True)
     
     try:
-        # Fetching all women's products with their category names
         query = """
             SELECT d.id, d.title, d.description, d.image_url, 
             d.original_price, d.discount_price, c.name as category 

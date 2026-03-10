@@ -18,11 +18,9 @@ def register():
         return jsonify({"error": "Missing required fields"}), 400
 
     try:
-        # Pass data to your model
         create_user(name, email, password)
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
-        # 4. Handle database errors (e.g., duplicate email)
         return jsonify({"error": str(e)}), 500
     
 @user_routes.route("/login", methods=["POST"])
@@ -31,16 +29,16 @@ def login():
     email = data.get("email")
     password = data.get("password")
     
-    # This calls the verify_user function we fixed earlier
     user = verify_user(email, password)
     
     if user:
-        return jsonify(
-        {"message": "Login successful",
-        "user": {
-        "id": user[0],     
-        "name": user[1],
-        "email": user[2]
-    }}), 200
+        return jsonify({
+            "message": "Login successful",
+            "user": {
+                "id": user['id'],     
+                "name": user['name'],
+                "email": user['email']
+            }
+        }), 200
     else:
         return jsonify({"error": "Invalid email or password"}), 401
