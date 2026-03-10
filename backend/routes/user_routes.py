@@ -35,6 +35,6 @@ def login():
     user = verify_user(email, password)
     
     if user:
-        return jsonify({"message": "Login successful", "user": user}), 200
+        return jsonify({"message": "Login successful", "user": "name"}), 200
     else:
         return jsonify({"error": "Invalid email or password"}), 401
