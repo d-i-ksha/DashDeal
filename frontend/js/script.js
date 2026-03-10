@@ -74,12 +74,17 @@ function filterAndSort() {
     let filtered = [...localInventory];
     
     if (category !== 'all') {
-        filtered = filtered.filter(p => p.category === categoryName);
+        filtered = filtered.filter(p => 
+            p.category.trim().toLowerCase() === categoryName.trim().toLowerCase()
+        );
     }
     
-    if (sortOrder === 'low') filtered.sort((a, b) => a.discount_price - b.discount_price);
-    if (sortOrder === 'high') filtered.sort((a, b) => b.discount_price - a.discount_price);
-    
+    if (sortOrder === 'low'){
+        filtered.sort((a, b) => parseFloat(a.discount_price) - parseFloat(b.discount_price));
+    }
+    if (sortOrder === 'high'){
+        filtered.sort((a, b) => parseFloat(b.discount_price) - parseFloat(a.discount_price));
+    }
     renderProducts(filtered);
 }
 
@@ -212,7 +217,7 @@ function renderIntoGrid(grid, products) {
     }
     grid.innerHTML = products.map(p => `
         <div class="card">
-            <img src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=600" alt="Fashion">
+            <img src= "${p.image_url || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'}" alt="${p.title}">
             <div class="card-info">
                 <h3>${p.title}</h3>
                 <p class="price">₹${p.discount_price}</p>

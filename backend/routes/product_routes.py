@@ -12,7 +12,8 @@ def get_all_products():
     try:
         # Fetching all women's products with their category names
         query = """
-            SELECT d.id, d.title, d.description, d.original_price, d.discount_price, c.name as category 
+            SELECT d.id, d.title, d.description, d.image_url, 
+            d.original_price, d.discount_price, c.name as category 
             FROM deals d
             JOIN categories c ON d.category_id = c.id
         """
