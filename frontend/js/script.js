@@ -77,19 +77,36 @@ function speak(text) {
 }
 
 async function processCheckout() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const user = JSON.parse(localStorage.getItem('user'));
-
     if (!user) {
-        speak("Please login to proceed with your payment.");
-        alert("Please login first.");
         window.location.href = "login.html";
         return;
     }
+    window.location.href = "payment.html";
+}
+async function completeOrderExecution() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const user = JSON.parse(localStorage.getItem('user'));
+    const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
 
-    if (cart.length === 0) return alert("Bag is empty!");
+    const orderData = {
+        user_id: user.id,
+        total_amount: total,
+        items: cart
+    };
 
-    speak("Redirecting you to our secure payment gateway.");
-    window.location.href = "payment.html"; 
+    try {
+        const response = await fetch(`${BASE_URL}/orders/checkout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.status === 201) {
+            alert("Order Success! ✨");
+            localStorage.removeItem('cart');
+            window.location.href = "dashboard.html";
+        }
+    } catch (err) { console.error("Order Failed", err); }
 }
 

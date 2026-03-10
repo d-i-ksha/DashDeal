@@ -1,30 +1,53 @@
-<div class="container">
-    <div class="form-container">
-        <h2>SECURE PAYMENT</h2>
-        <p style="text-align:center;">Payable: <strong id="pay-total"></strong></p>
-        <div class="payment-box">
-            <input type="text" placeholder="Card Number" maxlength="16">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Payment | DashDeal</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body onload="initPaymentVoice()">
+    <header><a href="index.html" class="logo">DASHDEAL</a></header>
+    
+    <div class="auth-wrapper">
+        <div class="form-container">
+            <h2>SECURE PAYMENT</h2>
+            <p style="text-align:center;">Payable Amount: <strong id="pay-total">₹0</strong></p>
+            
+            <input type="text" placeholder="Cardholder Name" required>
+            <input type="text" id="card-num" placeholder="1234 5678 9101 1121" maxlength="16" required>
             <div style="display:flex; gap:10px;">
                 <input type="text" placeholder="MM/YY" style="flex:1;">
                 <input type="text" placeholder="CVV" style="flex:1;">
             </div>
+            
+            <button class="btn" onclick="finalizePayment()">CONFIRM & PAY</button>
         </div>
-        <button class="btn" style="width:100%;" onclick="confirmPayment()">AUTHORIZE PAYMENT</button>
     </div>
-</div>
 
-<script src="../js/script.js"></script>
-<script>
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    document.getElementById('pay-total').innerText = `₹${total}`;
+    <script src="../js/script.js"></script>
+    <script>
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+        document.getElementById('pay-total').innerText = `₹${total}`;
 
-    async function confirmPayment() {
-        alert("Payment Authorized! Recording Order...");
-        await processCheckout(); // Calls your existing backend checkout
-    }
-    function speak(message) {
-    const msg = new SpeechSynthesisUtterance(message);
-    window.speechSynthesis.speak(msg);
-}
-</script>
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.rate = 0.9;
+            window.speechSynthesis.speak(msg);
+        }
+
+        function initPaymentVoice() {
+            speak("Welcome to secure checkout. Please enter your card details to finalize your purchase of " + total + " rupees.");
+        }
+
+        async function finalizePayment() {
+            const card = document.getElementById('card-num').value;
+            if(card.length < 16) return alert("Please enter a valid card number.");
+            
+            speak("Payment authorized. Placing your order now.");
+            // Calls the backend process to save orders to the database
+            await completeOrderExecution(); 
+        }
+    </script>
+</body>
+</html>
