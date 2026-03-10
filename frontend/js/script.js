@@ -257,3 +257,42 @@ function initAuthListeners() {
         };
     }
 }
+async function loadUserDashboard() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const orderTableBody = document.getElementById('order-history');
+    const welcomeMsg = document.getElementById('welcome-msg');
+
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    if (welcomeMsg) welcomeMsg.innerText = `Welcome, ${user.name}`;
+    if (!orderTableBody) return;
+
+    try {
+        // Fetch orders using the user_id from localStorage
+        const res = await fetch(`${BASE_URL}/orders/user/${user.id}`);
+        const orders = await res.json();
+
+        if (orders.length === 0) {
+            orderTableBody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No orders found.</td></tr>";
+            return;
+        }
+
+        // Map the database rows to table rows
+        orderTableBody.innerHTML = orders.map(order => `
+            <tr>
+                <td>#${order.id}</td>
+                <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                <td>₹${order.total_amount}</td>
+                <td style="color: ${order.status === 'Pending' ? 'orange' : 'green'};">
+                    ${order.status}
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) {
+        console.error("Dashboard error:", err);
+        orderTableBody.innerHTML = "<tr><td colspan='4'>Error loading order history.</td></tr>";
+    }
+}

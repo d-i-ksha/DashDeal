@@ -79,3 +79,21 @@ nav a { text-decoration: none; color: var(--dark); margin-left: 25px; font-weigh
 }
 .btn:hover { background: var(--gold); }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--gold);
+}
