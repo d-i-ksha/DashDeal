@@ -4,7 +4,9 @@ from routes.user_routes import user_routes
 from routes.product_routes import product_routes
 from routes.order_routes import order_routes
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder="../frontend/html",
+            static_folder="../frontend")
 
 CORS(app)
 app.register_blueprint(user_routes,url_prefix='/api/users')
