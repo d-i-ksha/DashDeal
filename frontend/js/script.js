@@ -66,14 +66,23 @@ async function loadProducts() {
     }
 }
 
-async function loadProducts() {
-    const grid = document.getElementById('product-list');
+async function loadFeatured() {
+    const grid = document.getElementById('featured-grid'); // Matches index.html ID
     if (!grid) return;
+    
     try {
         const res = await fetch(`${BASE_URL}/products/all`);
-        localInventory = await res.json();
-        renderProducts(localInventory);
-    } catch (err) { console.error("Error loading products", err); }
+        const products = await res.json();
+        
+        // Take the first 3 items for the "Featured" section
+        const featuredItems = products.slice(0, 3);
+        
+        // Use the existing renderIntoGrid logic
+        renderIntoGrid(grid, featuredItems);
+    } catch (err) { 
+        console.error("Featured items error", err); 
+        grid.innerHTML = "<p style='text-align:center;'>Unable to load styles.</p>";
+    }
 }
 
 function filterAndSort() {
