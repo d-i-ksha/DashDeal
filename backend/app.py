@@ -3,6 +3,7 @@ from flask_cors import CORS
 from routes.user_routes import user_routes
 from routes.product_routes import product_routes
 from routes.order_routes import order_routes
+import os
 
 app = Flask(__name__,
             template_folder="../frontend/html",
@@ -18,4 +19,5 @@ def home():
     return "DashDeal Backend Running 🚀"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
