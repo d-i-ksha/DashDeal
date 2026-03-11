@@ -1,4 +1,4 @@
-const BASE_URL = "https://dashdeal.onrender.com";
+const BASE_URL = "http://127.0.0.1:5000";
 let localInventory = []; 
 
 // 1. Unified Page Loader
