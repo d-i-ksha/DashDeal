@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:5000";
+const BASE_URL = "";
 let localInventory = []; 
 
 // 1. Unified Page Loader
@@ -13,7 +13,7 @@ window.onload = () => {
 
 function checkUserStatus() {
     const user = JSON.parse(localStorage.getItem('user'));
-    const authLink = document.querySelector('nav a[href="login.html"]');
+    const authLink = document.querySelector('nav a[href="/login"]');
     if (user && authLink) {
         authLink.innerText = "Logout";
         authLink.href = "#";
@@ -156,7 +156,7 @@ async function processCheckout() {
 
     if (!user) {
         showToast("Please login to place an order.");
-        setTimeout(() => window.location.href = "login.html", 1500);
+        setTimeout(() => window.location.href = "/login", 1500);
         return;
     }
 
@@ -165,7 +165,7 @@ async function processCheckout() {
         return;
     }
 
-    window.location.href = "checkout.html"; 
+    window.location.href = "/checkout"; 
 }
 
 // Final Order Database Insertion
@@ -203,7 +203,7 @@ async function completeOrderExecution() {
             speak("Thank you for your purchase. Your order has been placed successfully.");
             localStorage.removeItem('cart');
             localStorage.removeItem('shippingDetails'); // Clean up
-            setTimeout(() => window.location.href = "dashboard.html", 2000);
+            setTimeout(() => window.location.href = "/dashboard", 2000);
         } else {
             showToast("Payment Authorization Failed.");
             speak("I am sorry, the payment could not be processed.");
@@ -279,7 +279,7 @@ function initAuthListeners() {
                 if (res.ok) {
                     localStorage.setItem('user', JSON.stringify(data.user));
                     showToast("Login Successful!");
-                    setTimeout(() => window.location.href = "index.html", 1000);
+                    setTimeout(() => window.location.href = "/", 1000);
                 } else {
                     showToast(data.error || "Invalid Credentials");
                 }
@@ -324,7 +324,7 @@ async function loadUserDashboard() {
     const welcomeMsg = document.getElementById('welcome-msg');
 
     if (!user) {
-        window.location.href = 'login.html';
+        window.location.href = '/login';
         return;
     }
 
